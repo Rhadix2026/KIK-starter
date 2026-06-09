@@ -11,9 +11,9 @@ export default function LoginScreen({ onLogin }) {
     e.preventDefault()
     setError(''); setLoading(true)
     try {
-      await onLogin(email.trim() || 'demo@kik-starter.nl', password)
+      await onLogin(email.trim(), password)
     } catch (err) {
-      setError('Inloggen mislukt')
+      setError(err.message || 'Inloggen mislukt')
     } finally {
       setLoading(false)
     }
@@ -61,13 +61,6 @@ export default function LoginScreen({ onLogin }) {
           <p style={{ fontSize: 14, color: 'var(--text3)' }}>Voer uw gegevens in om door te gaan.</p>
         </div>
 
-        <div style={{ background: 'var(--blue-light)', border: '1px solid var(--blue-mid)', borderRadius: 'var(--radius)', padding: '12px 14px', marginBottom: 20, fontSize: 13 }}>
-          <div style={{ fontWeight: 700, color: 'var(--blue)', marginBottom: 4 }}>🎯 Demo-toegang</div>
-          <div style={{ color: 'var(--text2)' }}>
-            Deze shell heeft nog geen echte authenticatie — klik op <strong>Demo inloggen</strong> om de applicatie te verkennen.
-          </div>
-        </div>
-
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text2)' }}>E-mailadres</span>
@@ -81,7 +74,7 @@ export default function LoginScreen({ onLogin }) {
           <button type="submit" disabled={loading} style={{
             background: 'var(--blue)', color: '#fff', border: 'none', borderRadius: 'var(--radius)',
             padding: '11px 20px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font)', marginTop: 4,
-          }}>{loading ? 'Bezig…' : 'Demo inloggen →'}</button>
+          }}>{loading ? 'Bezig…' : 'Inloggen →'}</button>
         </form>
       </div>
     </div>

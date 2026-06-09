@@ -44,6 +44,9 @@ services:
       FUSEKI_URL: http://fuseki:3030
       FUSEKI_DATASET: kik
       KIK_ENV: development
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-dev-change-me-in-production}
+      KIK_ADMIN_EMAIL: ${KIK_ADMIN_EMAIL:-admin@kik-starter.nl}
+      KIK_ADMIN_PASSWORD: ${KIK_ADMIN_PASSWORD:-KikStarter2026!}
     volumes:
       - ./backend:/app
     ports:

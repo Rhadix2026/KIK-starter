@@ -9,24 +9,42 @@ function authHeaders(extra = {}) {
   return _token ? { Authorization: `Bearer ${_token}`, ...extra } : { ...extra }
 }
 
-export async function apiFetch(url, options = {}) {
-  const { headers = {}, ...rest } = options
-  const res = await fetch(url, { ...rest, headers: { ...authHeaders(), ...headers } })
-  if (res.status === 401) {
-    clearAuthToken()
-    window.dispatchEvent(new CustomEvent('kik:unauthorized'))
+async function req(method, path, body) {
+  const opts = { method, headers: authHeaders(body ? { 'Content-Type': 'application/json' } : {}) }
+  if (body !== undefined) opts.body = JSON.stringify(body)
+  const res = await fetch(`${BASE}${path}`, opts)
+  if (res.status === 401) { clearAuthToken(); window.dispatchEvent(new CustomEvent('kik:unauthorized')) }
+  if (!res.ok) {
+    let detail = `Fout ${res.status}`
+    try { const j = await res.json(); detail = j.detail || detail } catch {}
+    throw new Error(detail)
   }
-  return res
+  return res.status === 204 ? null : res.json()
 }
 
-export async function getMeta() {
-  const res = await apiFetch(`${BASE}/meta`)
-  if (!res.ok) throw new Error(await res.text())
-  return res.json()
-}
+// ── Meta ──
+export const getMeta   = () => req('GET', '/meta')
+export const getHealth = () => req('GET', '/health')
 
-export async function getHealth() {
-  const res = await apiFetch(`${BASE}/health`)
-  if (!res.ok) throw new Error('backend onbereikbaar')
-  return res.json()
+// ── Auth ──
+export async function login(email, password) {
+  const data = await req('POST', '/auth/login', { email, password })
+  setAuthToken(data.access_token)
+  return data
 }
+export const getMe          = () => req('GET', '/auth/me')
+export const changePassword = (current_password, new_password) =>
+  req('PATCH', '/auth/me/password', { current_password, new_password })
+
+// ── Platform-admin: organisaties ──
+export const listTenants     = () => req('GET', '/admin/tenants')
+export const createTenant    = (b) => req('POST', '/admin/tenants', b)
+export const listTenantUsers = (tenantId) => req('GET', `/admin/tenants/${tenantId}/users`)
+export const platformStats   = () => req('GET', '/admin/stats')
+
+// ── Org-admin: gebruikers binnen eigen organisatie ──
+export const listOrgUsers   = () => req('GET', '/org/users')
+export const createOrgUser  = (b) => req('POST', '/org/users', b)
+export const toggleUser     = (id) => req('PATCH', `/org/users/${id}/deactivate`)
+export const resetUserPwd   = (id, new_password) => req('POST', `/org/users/${id}/reset-password`, { new_password })
+export const deleteOrgUser  = (id) => req('DELETE', `/org/users/${id}`)

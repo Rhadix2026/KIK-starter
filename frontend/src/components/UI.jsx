@@ -99,3 +99,60 @@ export function StatusDot({ ok, label }) {
     </span>
   )
 }
+
+// ─── Extra UI-helpers voor gebruikersbeheer ──────────────────────────────────
+export function BtnGhost({ children, onClick, disabled, danger, style: sx = {} }) {
+  return (
+    <button type="button" onClick={disabled ? undefined : onClick} disabled={disabled} style={{
+      background: '#fff', color: danger ? 'var(--red)' : 'var(--text2)',
+      border: `1px solid ${danger ? 'var(--red-light)' : 'var(--border2)'}`,
+      borderRadius: 'var(--radius)', padding: '6px 12px', fontSize: 13, fontWeight: 600,
+      cursor: disabled ? 'not-allowed' : 'pointer', fontFamily: 'var(--font)',
+      opacity: disabled ? 0.5 : 1, ...sx,
+    }}>{children}</button>
+  )
+}
+
+export function RoleBadge({ role }) {
+  const map = {
+    PLATFORM_ADMIN: { label: 'Platformbeheerder', bg: '#1A2847', fg: '#fff' },
+    ORG_ADMIN:      { label: 'Organisatiebeheerder', bg: 'var(--blue-light)', fg: 'var(--blue)' },
+    ORG_USER:       { label: 'Gebruiker', bg: 'var(--bg)', fg: 'var(--text3)' },
+  }
+  const c = map[role] || map.ORG_USER
+  return <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 99, background: c.bg, color: c.fg }}>{c.label}</span>
+}
+
+export function Field({ label, type = 'text', value, onChange, placeholder, required, options }) {
+  const base = { padding: '9px 12px', borderRadius: 'var(--radius)', border: '1.5px solid var(--border)', fontSize: 14, fontFamily: 'var(--font)', outline: 'none', width: '100%', background: '#fff' }
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text2)' }}>{label}{required && <span style={{ color: 'var(--red)' }}> *</span>}</span>
+      {options
+        ? <select value={value} onChange={e => onChange(e.target.value)} style={base}>
+            {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
+        : <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} style={base} />}
+    </label>
+  )
+}
+
+export function Modal({ title, children, onClose }) {
+  return (
+    <div onClick={onClose} style={{
+      position: 'fixed', inset: 0, background: 'rgba(15,26,48,.45)', zIndex: 200,
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        background: '#fff', borderRadius: 'var(--radius-lg)', width: 460, maxWidth: '100%',
+        maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 50px rgba(0,0,0,.3)',
+      }}>
+        <div style={{ padding: '18px 22px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text)' }}>{title}</h3>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--text3)' }}>×</button>
+        </div>
+        <div style={{ padding: 22 }}>{children}</div>
+      </div>
+    </div>
+  )
+}

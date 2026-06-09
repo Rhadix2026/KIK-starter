@@ -40,4 +40,5 @@ Aanpak: **volledig herbouwen** in de Rhadix-stack (geen Java/Angular).
 ## Sessie-log
 | Datum | Wijziging |
 |-------|-----------|
+| 2026-06-09 | Mijlpaal 2: **gebruikersbeheer** met multi-tenant hiërarchie (PLATFORM_ADMIN → ORG_ADMIN → ORG_USER), zoals Rhadix-validatie. Backend: SQLAlchemy (Tenant/User, portable GUID), bcrypt + JWT + wachtwoordsterkte, seed platform-admin uit env, routers auth/admin/org (organisaties + gebruikers CRUD, rolhandhaving). Frontend: echte login, rol-gebaseerde nav, Gebruikersbeheer-pagina (eigen org) + Organisaties-pagina (platform) met aanmaken/deactiveren/wachtwoord-reset. Backend end-to-end getest (SQLite), frontend bouwt schoon. Compose-env: JWT_SECRET_KEY + KIK_ADMIN_*.
 | 2026-06-09 | Repo opgezet. Mijlpaal 1: monorepo-scaffold (React/Vite + FastAPI + Postgres + Fuseki + Docker) en Rhadix UI-shell (palet, Oxanium, KIK-wordmerk, Nav, Home met module-kaarten, demo-login, placeholder-pagina's voor de KIK-flows). Frontend bouwt schoon, backend serveert /api/health + /api/meta. |
