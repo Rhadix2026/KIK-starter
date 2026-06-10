@@ -1,5 +1,12 @@
 FROM node:20-alpine AS build
 WORKDIR /app
+
+# Build-args vóór COPY zodat de cache wordt gebust als env-waarden veranderen
+ARG VITE_API_URL=""
+ARG VITE_KIK_ENV=""
+ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_KIK_ENV=${VITE_KIK_ENV}
+
 COPY package.json .
 RUN npm install
 COPY . .

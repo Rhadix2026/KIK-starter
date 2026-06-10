@@ -11,6 +11,20 @@ import Gebruikersbeheer from './pages/Gebruikersbeheer'
 import Organisaties   from './pages/Organisaties'
 import NotFound       from './pages/NotFound'
 
+const KIK_ENV = import.meta.env.VITE_KIK_ENV
+
+function EnvBanner() {
+  if (KIK_ENV !== 'staging') return null
+  return (
+    <div style={{
+      background: '#f59e0b', color: '#1a2847', textAlign: 'center',
+      fontSize: 13, fontWeight: 700, padding: '6px 12px', letterSpacing: '.03em',
+    }}>
+      STAGING-OMGEVING — testdata, niet voor productiegebruik
+    </div>
+  )
+}
+
 export default function App() {
   const [authUser, setAuthUser] = useState(null)
   const [booting, setBooting]   = useState(false)
@@ -32,7 +46,7 @@ export default function App() {
     setAuthUser(null)
   }
 
-  if (!authUser) return <LoginScreen onLogin={handleLogin} />
+  if (!authUser) return (<><EnvBanner /><LoginScreen onLogin={handleLogin} /></>)
 
   const isPlatform = authUser.role === 'PLATFORM_ADMIN'
   const isAdmin    = isPlatform || authUser.role === 'ORG_ADMIN'
@@ -47,6 +61,7 @@ export default function App() {
 
   return (
     <>
+      <EnvBanner />
       <Nav authUser={authUser} onLogout={handleLogout} links={navLinks} />
       <Routes>
         <Route path="/" element={<Home authUser={authUser} />} />

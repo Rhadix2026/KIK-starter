@@ -50,3 +50,10 @@ KIK-starter/
 - **Resultaten** — inzien, vergelijken, exporteren
 
 Gebaseerd op de ZIN KIK-V Starter (`nl.kik.starter`) en de KIK-V Beheermodule.
+
+## Deployment (DTAP)
+
+De app gebruikt een DTAP-flow met branches `develop → staging → main`, GitHub
+Actions voor tests en deploy, en gescheiden staging/productie-omgevingen
+(eigen poorten zodat KIK naast de Rhadix-validation-app draait). Zie
+[DEPLOYMENT.md](DEPLOYMENT.md) voor het volledige proces en de vereiste secrets.
