@@ -3,8 +3,10 @@
 Een herbouw van de officiële **ZIN KIK-V Starter** in de **Rhadix-stack**
 (React/Vite · FastAPI · PostgreSQL · Fuseki · Docker), met de Rhadix huisstijl.
 
-> Status: **mijlpaal 1 — applicatie-shell**. Navigatie, huisstijl, login (demo) en
-> backend health/meta staan. De functionele KIK-modules volgen stap voor stap.
+> Status: **mijlpaal 3 — opvraag-flow**. Naast de shell (m1) en het multi-tenant
+> gebruikersbeheer (m2) is nu de kern beschikbaar: uitwisselprofielen kiezen,
+> indicatoren opvragen bij geregistreerde zorgaanbieders via hun (gesimuleerde)
+> datastation, en resultaten inzien/exporteren (CSV/Excel/API).
 
 ## Stack
 | Laag | Technologie |
