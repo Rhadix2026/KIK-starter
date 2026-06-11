@@ -1,4 +1,4 @@
-# KIK-Starter — ontwikkel- en testdependencies
+# Rhadix Uitvraag — ontwikkel- en testdependencies
 # Installeer met: pip install -r requirements-dev.txt
 # Productie-dependencies staan in requirements.txt
 

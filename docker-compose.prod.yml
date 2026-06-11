@@ -1,4 +1,4 @@
-# KIK-Starter — Productie docker-compose
+# Rhadix Uitvraag — Productie docker-compose
 # ─────────────────────────────────────────────────────────────────────────────
 # Eigen poorten (5176 / 8012) en eigen volumes (kik_*), gescheiden van staging
 # en van de Rhadix-validation-app. Deployments verlopen via GitHub Actions
@@ -39,7 +39,7 @@ services:
     # Geen externe poort — alleen intern Docker-netwerk
 
   backend:
-    image: ghcr.io/${GHCR_ORG:-rhadix2026}/kik-backend:${KIK_VERSION:-latest}
+    image: ghcr.io/${GHCR_ORG:-rhadix2026}/uitvraag-backend:${KIK_VERSION:-latest}
     container_name: kik-backend
     restart: always
     depends_on:
@@ -68,7 +68,7 @@ services:
       start_period: 30s
 
   frontend:
-    image: ghcr.io/${GHCR_ORG:-rhadix2026}/kik-frontend:${KIK_VERSION:-latest}
+    image: ghcr.io/${GHCR_ORG:-rhadix2026}/uitvraag-frontend:${KIK_VERSION:-latest}
     container_name: kik-frontend
     restart: always
     depends_on:

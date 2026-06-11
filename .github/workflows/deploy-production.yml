@@ -26,8 +26,8 @@ on:
 
 env:
   REGISTRY:       ghcr.io
-  BACKEND_IMAGE:  ghcr.io/rhadix2026/kik-backend
-  FRONTEND_IMAGE: ghcr.io/rhadix2026/kik-frontend
+  BACKEND_IMAGE:  ghcr.io/rhadix2026/uitvraag-backend
+  FRONTEND_IMAGE: ghcr.io/rhadix2026/uitvraag-frontend
 
 jobs:
   test:
@@ -107,7 +107,7 @@ jobs:
       - name: Log productie-deployment
         run: |
           echo "════════════════════════════════════════"
-          echo "  PRODUCTIE DEPLOYMENT — KIK-Starter"
+          echo "  PRODUCTIE DEPLOYMENT — Rhadix Uitvraag"
           echo "  Versie:  ${{ needs.build.outputs.version }}"
           echo "  Door:    ${{ github.actor }}"
           echo "  Tijd:    $(date -u '+%Y-%m-%d %H:%M:%S UTC')"

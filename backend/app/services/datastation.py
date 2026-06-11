@@ -22,6 +22,7 @@ class DatastationAntwoord:
     status: str                     # "OK" | "GEEN_DATA" | "FOUT"
     waarde: Optional[float]
     toelichting: Optional[str] = None
+    duur_ms: Optional[int] = None   # tijd die het datastation deed over de berekening
 
 
 def build_sparql(indicator_code: str) -> str:
@@ -40,10 +41,12 @@ def _simuleer(zorgaanbieder_key: str, indicator: dict) -> DatastationAntwoord:
     digest = hashlib.sha256(f"{zorgaanbieder_key}:{code}".encode()).digest()
     n = int.from_bytes(digest[:4], "big")
 
+    duur = 150 + (n % 2350)   # gesimuleerde verwerkingstijd: 150–2500 ms
+
     # ~12% van de combinaties levert geen data (aanbieder heeft de bron niet)
     if n % 100 < 12:
         return DatastationAntwoord("GEEN_DATA", None,
-                                   "Bron niet beschikbaar in datastation van deze aanbieder")
+                                   "Bron niet beschikbaar in datastation van deze aanbieder", duur)
 
     if "%" in eenheid:
         waarde = round(n % 1000 / 10.0, 1)              # 0–100 %
@@ -55,7 +58,7 @@ def _simuleer(zorgaanbieder_key: str, indicator: dict) -> DatastationAntwoord:
         waarde = float(n % 50000)
     else:
         waarde = round(n % 1000 / 10.0, 1)
-    return DatastationAntwoord("OK", waarde)
+    return DatastationAntwoord("OK", waarde, duur_ms=duur)
 
 
 def vraag_indicator(zorgaanbieder, indicator: dict) -> DatastationAntwoord:
@@ -63,15 +66,19 @@ def vraag_indicator(zorgaanbieder, indicator: dict) -> DatastationAntwoord:
     url = getattr(zorgaanbieder, "datastation_url", None)
     naam = getattr(zorgaanbieder, "naam", "onbekend")
     if url:
+        import time
+        t0 = time.monotonic()
         try:
             sparql = build_sparql(indicator["code"])
             resp = httpx.post(url, data={"query": sparql},
                               headers={"Accept": "application/sparql-results+json"}, timeout=10.0)
             resp.raise_for_status()
+            dur = int((time.monotonic() - t0) * 1000)
             rows = resp.json().get("results", {}).get("bindings", [])
             if not rows or "waarde" not in rows[0]:
-                return DatastationAntwoord("GEEN_DATA", None, "Datastation gaf geen waarde terug")
-            return DatastationAntwoord("OK", float(rows[0]["waarde"]["value"]))
+                return DatastationAntwoord("GEEN_DATA", None, "Datastation gaf geen waarde terug", dur)
+            return DatastationAntwoord("OK", float(rows[0]["waarde"]["value"]), duur_ms=dur)
         except Exception as exc:
-            return DatastationAntwoord("FOUT", None, f"Datastation onbereikbaar: {exc}")
+            dur = int((time.monotonic() - t0) * 1000)
+            return DatastationAntwoord("FOUT", None, f"Datastation onbereikbaar: {exc}", dur)
     return _simuleer(naam, indicator)

@@ -1,5 +1,5 @@
 """
-KIK-Starter (Rhadix-editie) — FastAPI backend
+Rhadix Uitvraag — FastAPI backend
 =============================================
 Mijlpaal 3: opvraag-flow — uitwisselprofielen, zorgaanbieders,
   uitvragen via (gesimuleerde) datastations en resultaat-export.
@@ -15,9 +15,9 @@ from app.bootstrap import init_db
 from app.routers import health, meta, admin, org, profiles, zorgaanbieders, uitvragen
 from app.auth.router import router as auth_router
 
-APP_VERSION = "0.3.0"
+APP_VERSION = "0.4.0"
 
-app = FastAPI(title="KIK-Starter API (Rhadix-editie)", version=APP_VERSION)
+app = FastAPI(title="Rhadix Uitvraag API", version=APP_VERSION)
 
 app.add_middleware(
     CORSMiddleware, allow_origins=["*"], allow_credentials=True,
@@ -42,4 +42,4 @@ app.include_router(uitvragen.router, prefix="/api")
 
 @app.get("/api")
 def root():
-    return {"app": "KIK-Starter", "edition": "Rhadix", "version": APP_VERSION}
+    return {"app": "Rhadix Uitvraag", "edition": "KIK-V", "version": APP_VERSION}
