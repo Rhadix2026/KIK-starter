@@ -1,10 +1,10 @@
-# KIK-Starter — Deployment & DTAP
+# Rhadix Uitvraag — Deployment & DTAP
 
 ## Overzicht
 
-De KIK-Starter gebruikt dezelfde DTAP-strategie als de Rhadix-validation-app, met
+De Rhadix Uitvraag gebruikt dezelfde DTAP-strategie als de Rhadix-validation-app, met
 drie volledig gescheiden omgevingen. De poorten en volumes zijn anders gekozen,
-zodat KIK-Starter **naast** de validation-app op dezelfde server kan draaien.
+zodat Rhadix Uitvraag **naast** de validation-app op dezelfde server kan draaien.
 
 | Omgeving    | Branch    | Frontend | Backend | Database      | Image-tag |
 |-------------|-----------|----------|---------|---------------|-----------|
@@ -14,8 +14,8 @@ zodat KIK-Starter **naast** de validation-app op dezelfde server kan draaien.
 
 > Staging toont bovenaan een oranje balk (`VITE_KIK_ENV=staging`). Productie niet.
 
-Server-pad: `/opt/kik-app/`. Container-registry: `ghcr.io/rhadix2026/kik-backend`
-en `…/kik-frontend`.
+Server-pad: `/opt/kik-app/`. Container-registry: `ghcr.io/rhadix2026/uitvraag-backend`
+en `…/uitvraag-frontend`.
 
 ---
 

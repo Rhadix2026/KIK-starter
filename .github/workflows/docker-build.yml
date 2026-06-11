@@ -7,8 +7,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  BACKEND_IMAGE:  ghcr.io/rhadix2026/kik-backend
-  FRONTEND_IMAGE: ghcr.io/rhadix2026/kik-frontend
+  BACKEND_IMAGE:  ghcr.io/rhadix2026/uitvraag-backend
+  FRONTEND_IMAGE: ghcr.io/rhadix2026/uitvraag-frontend
 
 jobs:
   build-and-push:

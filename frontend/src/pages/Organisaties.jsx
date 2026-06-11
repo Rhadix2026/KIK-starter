@@ -24,7 +24,7 @@ export default function Organisaties() {
   return (
     <Page>
       <PageTitle badge="Platformbeheer" title="Organisaties"
-        sub="Beheer de organisaties op het KIK-Starter platform. Bij een nieuwe organisatie maakt u meteen de eerste organisatiebeheerder aan." />
+        sub="Beheer de organisaties op het Rhadix Uitvraag platform. Bij een nieuwe organisatie maakt u meteen de eerste organisatiebeheerder aan." />
 
       {stats && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 20 }}>

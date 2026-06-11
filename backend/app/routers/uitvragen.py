@@ -1,5 +1,5 @@
 """
-uitvragen.py — Het hart van de KIK-Starter.
+uitvragen.py — Het hart van de Rhadix Uitvraag.
 
 Een ketenpartij stelt een uitvraag samen (uitwisselprofiel + indicatoren) en
 richt die op één of meer zorgaanbieders. Per (aanbieder × indicator) wordt het
@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import csv
 import io
+import statistics
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -44,13 +45,14 @@ def _antwoord_dict(a: Antwoord) -> dict:
     return {"id": str(a.id), "zorgaanbieder_id": str(a.zorgaanbieder_id) if a.zorgaanbieder_id else None,
             "zorgaanbieder": a.zorgaanbieder_naam, "indicator_code": a.indicator_code,
             "indicator": a.indicator_label, "eenheid": a.eenheid, "waarde": a.waarde,
-            "status": a.status.value, "toelichting": a.toelichting,
+            "status": a.status.value, "toelichting": a.toelichting, "duur_ms": a.duur_ms,
             "computed_at": a.computed_at.isoformat() if a.computed_at else None}
 
 
 def _uitvraag_dict(u: Uitvraag, with_antwoorden=False) -> dict:
     d = {"id": str(u.id), "profiel_key": u.profiel_key, "profiel_label": u.profiel_label,
          "status": u.status.value, "aantal_antwoorden": len(u.antwoorden),
+         "doorlooptijd_ms": u.doorlooptijd_ms,
          "created_at": u.created_at.isoformat() if u.created_at else None}
     if with_antwoorden:
         d["antwoorden"] = [_antwoord_dict(a) for a in u.antwoorden]
@@ -80,17 +82,24 @@ def create_uitvraag(body: CreateUitvraag, db: Session = Depends(get_db),
     db.add(uitvraag); db.flush()
 
     n_ok = n_total = 0
+    duren = []
     for z in aanbieders:
         for ind in indicatoren:
             res = vraag_indicator(z, ind)
             n_total += 1
             if res.status == "OK":
                 n_ok += 1
+            if res.duur_ms is not None:
+                duren.append(res.duur_ms)
             db.add(Antwoord(
                 id=uuid.uuid4(), uitvraag_id=uitvraag.id, zorgaanbieder_id=z.id,
                 zorgaanbieder_naam=z.naam, indicator_code=ind["code"],
                 indicator_label=ind["label"], eenheid=ind.get("eenheid"),
-                waarde=res.waarde, status=AntwoordStatus(res.status), toelichting=res.toelichting))
+                waarde=res.waarde, status=AntwoordStatus(res.status),
+                toelichting=res.toelichting, duur_ms=res.duur_ms))
+
+    # doorlooptijd = langste datastation-call (datastations parallel bevraagd)
+    uitvraag.doorlooptijd_ms = max(duren) if duren else None
 
     uitvraag.status = (UitvraagStatus.VOLTOOID if n_ok == n_total
                        else UitvraagStatus.MISLUKT if n_ok == 0
@@ -104,6 +113,74 @@ def list_uitvragen(db: Session = Depends(get_db), current: User = Depends(get_cu
     rows = (db.query(Uitvraag).filter(Uitvraag.tenant_id == current.tenant_id)
             .order_by(Uitvraag.created_at.desc()).all())
     return [_uitvraag_dict(u) for u in rows]
+
+
+@router.get("/uitvragen/stats")
+def uitvragen_stats(db: Session = Depends(get_db), current: User = Depends(get_current_user)):
+    """Analyse/Monitor: volumes, response-ratio, doorlooptijd en uitsplitsingen."""
+    from collections import Counter, defaultdict
+
+    uitvragen = db.query(Uitvraag).filter(Uitvraag.tenant_id == current.tenant_id).all()
+    antwoorden = (db.query(Antwoord).join(Uitvraag, Antwoord.uitvraag_id == Uitvraag.id)
+                  .filter(Uitvraag.tenant_id == current.tenant_id).all())
+
+    sc = Counter(a.status.value for a in antwoorden)
+    n_ok, n_geen, n_fout = sc.get("OK", 0), sc.get("GEEN_DATA", 0), sc.get("FOUT", 0)
+    totaal_antw = len(antwoorden)
+    ratio = lambda x: round(x / totaal_antw, 3) if totaal_antw else 0.0
+
+    dts = [u.doorlooptijd_ms for u in uitvragen if u.doorlooptijd_ms is not None]
+    doorlooptijd = {
+        "gemiddeld_ms": round(statistics.mean(dts)) if dts else None,
+        "mediaan_ms":   round(statistics.median(dts)) if dts else None,
+        "max_ms":       max(dts) if dts else None,
+    }
+
+    prof_label = {u.id: u.profiel_label for u in uitvragen}
+    per_prof = defaultdict(lambda: {"uitvragen": 0, "antwoorden": 0, "ok": 0})
+    for u in uitvragen:
+        per_prof[u.profiel_label]["uitvragen"] += 1
+    for a in antwoorden:
+        lbl = prof_label.get(a.uitvraag_id, "—")
+        per_prof[lbl]["antwoorden"] += 1
+        if a.status.value == "OK":
+            per_prof[lbl]["ok"] += 1
+
+    per_za = defaultdict(lambda: {"antwoorden": 0, "ok": 0, "duren": []})
+    for a in antwoorden:
+        d = per_za[a.zorgaanbieder_naam]
+        d["antwoorden"] += 1
+        if a.status.value == "OK":
+            d["ok"] += 1
+        if a.duur_ms is not None:
+            d["duren"].append(a.duur_ms)
+
+    tijdlijn = defaultdict(int)
+    for u in uitvragen:
+        if u.created_at:
+            tijdlijn[u.created_at.date().isoformat()] += 1
+
+    return {
+        "totaal_uitvragen": len(uitvragen),
+        "totaal_antwoorden": totaal_antw,
+        "antwoord_status": {"OK": n_ok, "GEEN_DATA": n_geen, "FOUT": n_fout},
+        "response_ratio": ratio(n_ok),
+        "geen_data_ratio": ratio(n_geen),
+        "fout_ratio": ratio(n_fout),
+        "doorlooptijd": doorlooptijd,
+        "per_profiel": sorted(
+            [{"profiel": k, "uitvragen": v["uitvragen"], "antwoorden": v["antwoorden"],
+              "response_ratio": round(v["ok"] / v["antwoorden"], 3) if v["antwoorden"] else 0.0}
+             for k, v in per_prof.items()],
+            key=lambda x: x["antwoorden"], reverse=True),
+        "per_zorgaanbieder": sorted(
+            [{"zorgaanbieder": k, "antwoorden": v["antwoorden"],
+              "response_ratio": round(v["ok"] / v["antwoorden"], 3) if v["antwoorden"] else 0.0,
+              "gem_duur_ms": round(statistics.mean(v["duren"])) if v["duren"] else None}
+             for k, v in per_za.items()],
+            key=lambda x: x["antwoorden"], reverse=True),
+        "tijdlijn": [{"datum": d, "uitvragen": n} for d, n in sorted(tijdlijn.items())],
+    }
 
 
 def _get_owned(uitvraag_id: str, db: Session, current: User) -> Uitvraag:

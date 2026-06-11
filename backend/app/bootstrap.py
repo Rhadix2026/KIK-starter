@@ -4,6 +4,8 @@ from __future__ import annotations
 import os
 import uuid
 
+from sqlalchemy import inspect, text
+
 from app.database import Base, SessionLocal, engine
 from app.models.auth_models import Tenant, User, UserRole
 from app.models import kik_models  # noqa: F401  (registreert KIK-tabellen)
@@ -13,8 +15,30 @@ from app.auth.security import hash_password
 
 def init_db() -> None:
     Base.metadata.create_all(bind=engine)
+    _ensure_columns()
     _seed_platform_admin()
     _seed_demo_zorgaanbieders()
+
+
+def _ensure_columns() -> None:
+    """Voeg ontbrekende kolommen toe aan bestaande tabellen (lichtgewicht migratie).
+
+    create_all() maakt alleen nieuwe tabellen; bij een reeds bestaande database
+    (bijv. staging) ontbreken nieuwe kolommen. Deze helper voegt ze defensief toe.
+    """
+    wanted = {
+        "antwoorden": [("duur_ms", "INTEGER")],
+        "uitvragen":  [("doorlooptijd_ms", "INTEGER")],
+    }
+    insp = inspect(engine)
+    with engine.begin() as conn:
+        for table, cols in wanted.items():
+            if not insp.has_table(table):
+                continue
+            existing = {c["name"] for c in insp.get_columns(table)}
+            for name, ddl in cols:
+                if name not in existing:
+                    conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {name} {ddl}"))
 
 
 def _seed_platform_admin() -> None:
@@ -29,7 +53,7 @@ def _seed_platform_admin() -> None:
 
         tenant = db.query(Tenant).filter(Tenant.slug == "platform").first()
         if not tenant:
-            tenant = Tenant(id=uuid.uuid4(), slug="platform", name="KIK-Starter Platform", is_active=True)
+            tenant = Tenant(id=uuid.uuid4(), slug="platform", name="Rhadix Uitvraag Platform", is_active=True)
             db.add(tenant)
             db.flush()
 

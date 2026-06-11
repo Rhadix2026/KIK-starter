@@ -1,10 +1,10 @@
-# CLAUDE.md — KIK-Starter (Rhadix-editie) projectgeheugen
+# CLAUDE.md — Rhadix Uitvraag (Rhadix-editie) projectgeheugen
 
 Lees dit bestand aan het begin van elke sessie. Werk de sessie-log bij aan het eind.
 
 ## Project
 Herbouw van de **ZIN KIK-V Starter** in de **Rhadix-stack**, met Rhadix look & feel.
-- **Repo:** https://github.com/Rhadix2026/KIK-starter
+- **Repo:** https://github.com/Rhadix2026/rhadix-uitvraag
 - **Stack:** React/Vite (frontend), FastAPI (backend), PostgreSQL, Apache Jena Fuseki, Docker
 - **Zusterproject:** Rhadix-datavalidatie (zelfde huisstijl, palet, Oxanium-font)
 
@@ -18,7 +18,7 @@ Aanpak: **volledig herbouwen** in de Rhadix-stack (geen Java/Angular).
 ## Huisstijl (overgenomen van Rhadix)
 - Palet: `--blue/#1A2847` (navy), `--blue-dark/#0F1A30`, `--accent/#6FA8D0`, `--blue-mid/#B8D4EA`.
 - Font: **Oxanium** (lokaal in `frontend/public/fonts`, OFL).
-- Eigen wordmerk **KIK-Starter** (SVG in `components/Brand.jsx`) — bewust NIET het Rhadix-logo.
+- Eigen wordmerk **Rhadix Uitvraag** (SVG in `components/Brand.jsx`) — bewust NIET het Rhadix-logo.
 - Componenten in `components/UI.jsx`: Nav, Page, PageTitle, Card, BtnPrimary, StatusDot.
 
 ## Structuur

@@ -70,3 +70,25 @@ def test_ongeldige_indicator_422(client, auth):
         "profiel_key": profs[0]["key"], "indicator_codes": ["BESTAAT_NIET"],
         "zorgaanbieder_ids": [za[0]["id"]]})
     assert r.status_code == 422
+
+
+def test_stats_endpoint(client, auth):
+    profs = client.get("/api/profielen", headers=auth).json()
+    key = profs[0]["key"]
+    codes = [i["code"] for i in client.get(f"/api/profielen/{key}", headers=auth).json()["indicatoren"]]
+    za = [z["id"] for z in client.get("/api/zorgaanbieders", headers=auth).json()[:2]]
+    client.post("/api/uitvragen", headers=auth,
+                json={"profiel_key": key, "indicator_codes": codes, "zorgaanbieder_ids": za})
+
+    r = client.get("/api/uitvragen/stats", headers=auth)
+    assert r.status_code == 200, r.text
+    s = r.json()
+    assert s["totaal_uitvragen"] >= 1
+    assert s["totaal_antwoorden"] >= len(codes) * 2
+    assert set(s["antwoord_status"]) == {"OK", "GEEN_DATA", "FOUT"}
+    assert 0.0 <= s["response_ratio"] <= 1.0
+    assert "gemiddeld_ms" in s["doorlooptijd"]
+    assert len(s["per_profiel"]) >= 1
+    assert len(s["per_zorgaanbieder"]) >= 1
+    # 'stats' mag niet als uitvraag-id worden gelezen
+    assert client.get("/api/uitvragen/stats", headers=auth).status_code == 200

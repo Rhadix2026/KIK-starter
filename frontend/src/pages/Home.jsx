@@ -22,12 +22,13 @@ export default function Home({ authUser }) {
     ...(isAdmin ? [{ to: '/gebruikers', icon: '👥', title: 'Gebruikersbeheer', desc: 'Gebruikers in uw organisatie beheren: rollen, (de)activeren, wachtwoorden.', status: 'Beschikbaar' }] : []),
     ...(isPlatform ? [{ to: '/organisaties', icon: '🏢', title: 'Organisaties', desc: 'Organisaties op het platform beheren en beheerders aanmaken.', status: 'Beschikbaar' }] : []),
     { to: '/resultaten', icon: '📊', title: 'Resultaten', desc: 'Indicatorresultaten bekijken, vergelijken en exporteren (CSV/Excel/API).', status: 'Beschikbaar' },
+    { to: '/analyse', icon: '📈', title: 'Analyse & Monitor', desc: 'Volumes, response-ratio en doorlooptijd per profiel en zorgaanbieder.', status: 'Beschikbaar' },
   ]
 
   return (
     <Page>
       <PageTitle badge={`Ingelogd als ${authUser?.name || authUser?.email}`}
-        title="Welkom bij de KIK-Starter"
+        title="Welkom bij de Rhadix Uitvraag"
         sub="Een herbouw van de ZIN KIK-V Starter in de Rhadix-stack. De opvraag-flow en het gebruikersbeheer zijn beschikbaar." />
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20, marginBottom: 28 }}>

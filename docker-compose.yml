@@ -1,4 +1,4 @@
-# KIK-Starter (Rhadix-editie) — lokale ontwikkelstack
+# Rhadix Uitvraag (Rhadix-editie) — lokale ontwikkelstack
 # Start:  docker compose up -d --build
 services:
   db:

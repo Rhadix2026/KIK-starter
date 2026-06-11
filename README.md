@@ -1,12 +1,13 @@
-# KIK-Starter — Rhadix-editie
+# Rhadix Uitvraag
 
-Een herbouw van de officiële **ZIN KIK-V Starter** in de **Rhadix-stack**
+De afnemer-applicatie binnen het KIK-V-stelsel (opvolger van de ZIN KIK-V Starter), in de **Rhadix-stack**
 (React/Vite · FastAPI · PostgreSQL · Fuseki · Docker), met de Rhadix huisstijl.
 
-> Status: **mijlpaal 3 — opvraag-flow**. Naast de shell (m1) en het multi-tenant
-> gebruikersbeheer (m2) is nu de kern beschikbaar: uitwisselprofielen kiezen,
-> indicatoren opvragen bij geregistreerde zorgaanbieders via hun (gesimuleerde)
-> datastation, en resultaten inzien/exporteren (CSV/Excel/API).
+> Status: **mijlpaal 5 — analyse & monitor**. Naast de shell (m1), het multi-tenant
+> gebruikersbeheer (m2) en de opvraag-flow (m3) staat nu de afnemer-app als
+> **Rhadix Uitvraag** (m4) met een **Analyse/Monitor**-dashboard (m5): volumes,
+> response-ratio en doorlooptijd per uitwisselprofiel en zorgaanbieder.
+> Zie [ARCHITECTUUR.md](ARCHITECTUUR.md) voor de positionering binnen KIK-V.
 
 ## Stack
 | Laag | Technologie |
@@ -34,7 +35,7 @@ cd frontend && npm install && npm run dev
 
 ## Structuur
 ```
-KIK-starter/
+rhadix-uitvraag/
 ├─ frontend/         React/Vite app (Rhadix UI-shell)
 │  └─ src/
 │     ├─ components/ Brand (KIK-logo), UI (Nav, Card, Button…)

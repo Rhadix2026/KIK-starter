@@ -11,7 +11,7 @@ from __future__ import annotations
 import enum
 import uuid
 
-from sqlalchemy import (Column, DateTime, Enum, Float, ForeignKey, String, Text)
+from sqlalchemy import (Column, DateTime, Enum, Float, ForeignKey, Integer, String, Text)
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -54,8 +54,9 @@ class Uitvraag(Base):
     created_by    = Column(GUID(), nullable=True)
     profiel_key   = Column(String(64), nullable=False)
     profiel_label = Column(String(255), nullable=False)
-    status        = Column(Enum(UitvraagStatus), nullable=False, default=UitvraagStatus.VOLTOOID)
-    created_at    = Column(DateTime(timezone=True), server_default=func.now())
+    status         = Column(Enum(UitvraagStatus), nullable=False, default=UitvraagStatus.VOLTOOID)
+    doorlooptijd_ms = Column(Integer, nullable=True)   # max latency over de antwoorden (parallel model)
+    created_at     = Column(DateTime(timezone=True), server_default=func.now())
 
     antwoorden = relationship("Antwoord", back_populates="uitvraag",
                               cascade="all, delete-orphan", order_by="Antwoord.zorgaanbieder_naam")
@@ -75,6 +76,7 @@ class Antwoord(Base):
     waarde            = Column(Float, nullable=True)
     status            = Column(Enum(AntwoordStatus), nullable=False, default=AntwoordStatus.OK)
     toelichting       = Column(Text, nullable=True)
+    duur_ms           = Column(Integer, nullable=True)   # gesimuleerde/echte datastation-latency
     computed_at       = Column(DateTime(timezone=True), server_default=func.now())
 
     uitvraag      = relationship("Uitvraag", back_populates="antwoorden")

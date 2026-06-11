@@ -13,7 +13,7 @@ async function req(method, path, body) {
   const opts = { method, headers: authHeaders(body ? { 'Content-Type': 'application/json' } : {}) }
   if (body !== undefined) opts.body = JSON.stringify(body)
   const res = await fetch(`${BASE}${path}`, opts)
-  if (res.status === 401) { clearAuthToken(); window.dispatchEvent(new CustomEvent('kik:unauthorized')) }
+  if (res.status === 401) { clearAuthToken(); window.dispatchEvent(new CustomEvent('rhadix:unauthorized')) }
   if (!res.ok) {
     let detail = `Fout ${res.status}`
     try { const j = await res.json(); detail = j.detail || detail } catch {}
@@ -73,3 +73,6 @@ export async function downloadUitvraag(id, fmt = 'csv') {
   document.body.appendChild(a); a.click(); a.remove()
   URL.revokeObjectURL(url)
 }
+
+// ── Analyse / Monitor ──
+export const getUitvraagStats = () => req('GET', '/uitvragen/stats')

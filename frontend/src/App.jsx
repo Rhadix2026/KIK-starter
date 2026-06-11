@@ -7,6 +7,7 @@ import Home           from './pages/Home'
 import QueryFlow      from './pages/QueryFlow'
 import Zorgaanbieders from './pages/Zorgaanbieders'
 import Results        from './pages/Results'
+import Analyse        from './pages/Analyse'
 import Gebruikersbeheer from './pages/Gebruikersbeheer'
 import Organisaties   from './pages/Organisaties'
 import NotFound       from './pages/NotFound'
@@ -31,8 +32,8 @@ export default function App() {
 
   useEffect(() => {
     const onUnauth = () => setAuthUser(null)
-    window.addEventListener('kik:unauthorized', onUnauth)
-    return () => window.removeEventListener('kik:unauthorized', onUnauth)
+    window.addEventListener('rhadix:unauthorized', onUnauth)
+    return () => window.removeEventListener('rhadix:unauthorized', onUnauth)
   }, [])
 
   async function handleLogin(email, password) {
@@ -55,6 +56,7 @@ export default function App() {
     { to: '/opvragen',      label: 'Opvragen' },
     { to: '/zorgaanbieders', label: 'Zorgaanbieders' },
     { to: '/resultaten',    label: 'Resultaten' },
+    { to: '/analyse',       label: 'Analyse' },
     ...(isAdmin    ? [{ to: '/gebruikers',   label: 'Gebruikers' }] : []),
     ...(isPlatform ? [{ to: '/organisaties', label: 'Organisaties' }] : []),
   ]
@@ -68,6 +70,7 @@ export default function App() {
         <Route path="/opvragen" element={<QueryFlow />} />
         <Route path="/zorgaanbieders" element={<Zorgaanbieders />} />
         <Route path="/resultaten" element={<Results />} />
+        <Route path="/analyse" element={<Analyse />} />
         <Route path="/gebruikers" element={isAdmin ? <Gebruikersbeheer authUser={authUser} /> : <Navigate to="/" replace />} />
         <Route path="/organisaties" element={isPlatform ? <Organisaties /> : <Navigate to="/" replace />} />
         <Route path="/404" element={<NotFound />} />
