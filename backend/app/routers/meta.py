@@ -9,14 +9,15 @@ router = APIRouter()
 def meta():
     """Applicatie-metadata voor de frontend-shell (omgeving, versie, features)."""
     return {
-        "name": "KIK-Starter",
-        "edition": "Rhadix",
-        "version": "0.3.0",
+        "name": "Rhadix Uitvraag",
+        "edition": "KIK-V",
+        "version": "0.4.0",
         "environment": os.getenv("KIK_ENV", "development"),
         "modules": [
             {"key": "query-flow", "label": "Opvragen", "status": "available"},
             {"key": "zorgaanbieders", "label": "Zorgaanbieders", "status": "available"},
             {"key": "results", "label": "Resultaten", "status": "available"},
+            {"key": "analyse", "label": "Analyse & Monitor", "status": "available"},
             {"key": "user-mgmt", "label": "Gebruikersbeheer", "status": "available"},
         ],
     }

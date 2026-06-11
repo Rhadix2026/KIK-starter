@@ -29,7 +29,7 @@ dezelfde flow, met de echte trust-laag (voorlopig) gesimuleerd.
 |-----|---------------------|---------|
 | Beheerorganisatie | **Publicatieplatform** | Publiceert afsprakenset, ontologie, uitwisselprofielen en gevalideerde SPARQL-vragen |
 | Beheerorganisatie | **Credentialsplatform** | Geeft autorisatieclaims (Verifiable Credentials) uit en trekt ze in; levert ook adressering (datastation vinden via gevalideerd KvK) |
-| Afnemer (NZa, IGJ, VWS, Zorgkantoren) | **KIK-Starter** | Gevalideerde vragen stellen aan aanbieders én analyses uitvoeren op de antwoorden (multi-tenant, *tijdelijke* oplossing) |
+| Afnemer (NZa, IGJ, VWS, Zorgkantoren) | **Rhadix Uitvraag** | Gevalideerde vragen stellen aan aanbieders én analyses uitvoeren op de antwoorden (multi-tenant, *tijdelijke* oplossing) |
 | Aanbieder (zorgaanbieder) | **Datastation** | Data beschikbaar stellen en gevalideerde vragen beantwoorden (RDF-store + SPARQL) |
 | Netwerk | **Vertrouwd netwerk (Nuts)** | Publiceert sleutels; maakt issuer/holder/verifier-vertrouwen mogelijk |
 
@@ -64,7 +64,7 @@ flowchart LR
 |------------|---------------|---------|--------|
 | **Rhadix Validatie** | (aanbieder, datakwaliteit) | Pre-screening: is mijn datahuishouding klaar om gevalideerde vragen te beantwoorden? Toevoeging op het model, geen 1‑op‑1. | In gebruik |
 | **Rhadix Datastation** | Datastation | 1‑op‑1. Fuseki = de motor (functie 3+4: SPARQL + data beschikbaar stellen). De volledige spec heeft een compliance-schil eromheen (zie §5). | Kern (Fuseki) |
-| **Rhadix Uitvraag** | KIK-Starter (afnemer) | 1‑op‑1, opvolger van de tijdelijke KIK-Starter. Modules: **Opvragen** (de vraag-wizard) en **Analyse/Monitor** (dashboards). | In aanbouw |
+| **Rhadix Uitvraag** | Rhadix Uitvraag (afnemer) | 1‑op‑1, opvolger van de tijdelijke Rhadix Uitvraag. Modules: **Opvragen** (de vraag-wizard) en **Analyse/Monitor** (dashboards). | In aanbouw |
 
 ## 4. Naamgeving — waarom "Rhadix Uitvraag"
 
@@ -121,7 +121,7 @@ HealthDCAT (datacatalogus, toekomstig).
 ## 7. Samengevat
 
 De opzet klopt en is een nette federatieve twin: **Datastation** is 1‑op‑1,
-**Uitvraag** is de opvolger van de KIK-Starter (met analyse/monitor als logische
+**Uitvraag** is de opvolger van de Rhadix Uitvraag (met analyse/monitor als logische
 uitbreiding), en **Validatie** is een zinvolle pre-screening-toevoeging. De
 belangrijkste volgende stap richting volledigheid is het modelleren van de
 **vertrouwenslaag** (Verifiable Credentials / Nuts).

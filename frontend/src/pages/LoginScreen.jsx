@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { KikLogo, KikMark } from '../components/Brand'
+import { UitvraagLogo, UitvraagMark } from '../components/Brand'
 
 export default function LoginScreen({ onLogin }) {
   const [email, setEmail]       = useState('')
@@ -31,17 +31,16 @@ export default function LoginScreen({ onLogin }) {
         flex: 1, background: 'var(--blue-hero)', display: 'flex', flexDirection: 'column',
         position: 'relative', overflow: 'hidden',
       }}>
-        <div style={{ padding: '32px 48px 0' }}><KikLogo /></div>
+        <div style={{ padding: '32px 48px 0' }}><UitvraagLogo /></div>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 48px 100px' }}>
           <span style={{
             display: 'inline-flex', alignSelf: 'flex-start', background: 'rgba(111,168,208,.25)',
             color: 'rgba(168,197,224,.95)', fontSize: 11, fontWeight: 700, letterSpacing: '1.5px',
             padding: '5px 12px', borderRadius: 99, marginBottom: 24, textTransform: 'uppercase',
-          }}>KIK-V · Rhadix editie</span>
+          }}>Rhadix Uitvraag · KIK-V</span>
           <h1 style={{ fontWeight: 800, fontSize: 36, color: '#fff', lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: 18, maxWidth: 460 }}>
-            De KIK-V Starter,{' '}
-            <span style={{ color: 'var(--accent)' }}>opnieuw opgebouwd</span>{' '}
-            in de Rhadix-stack
+            Gevalideerde vragen aan zorgaanbieders,{' '}
+            <span style={{ color: 'var(--accent)' }}>eenvoudig en vertrouwd</span>
           </h1>
           <p style={{ fontSize: 15, color: 'rgba(168,197,224,.8)', lineHeight: 1.65, maxWidth: 420 }}>
             Decentrale databronnen bevragen via uitwisselprofielen en SPARQL — in een
@@ -50,7 +49,7 @@ export default function LoginScreen({ onLogin }) {
         </div>
         {/* decoratie rechtsonder */}
         <div style={{ position: 'absolute', bottom: -40, right: -30, opacity: 0.12, transform: 'scale(7)' }}>
-          <KikMark size={40} />
+          <UitvraagMark size={40} />
         </div>
       </div>
 

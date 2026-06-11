@@ -24,7 +24,7 @@ class UserRole(str, enum.Enum):
 
 
 class Tenant(Base):
-    """Een organisatie binnen de KIK-Starter."""
+    """Een organisatie binnen de Rhadix Uitvraag."""
     __tablename__ = "tenants"
 
     id         = Column(GUID(), primary_key=True, default=uuid.uuid4)

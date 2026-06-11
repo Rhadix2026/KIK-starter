@@ -1,10 +1,10 @@
-// ─── KIK-Starter wordmerk (eigen SVG, in de Rhadix-huisstijl) ────────────────
-// Bewust géén Rhadix-logo: zelfde look & feel (navy + accentblauw, Oxanium),
-// maar een eigen merk om verwarring met de validatie-app te voorkomen.
+// ─── Rhadix Uitvraag wordmerk (eigen SVG, in de Rhadix-huisstijl) ────────────
+// Eigen merk binnen de Rhadix-familie: zelfde look & feel (navy + accentblauw,
+// Oxanium), maar herkenbaar als de uitvraag-app voor ketenpartijen.
 
-export function KikMark({ size = 34 }) {
-  // Drie gestileerde knopen + verbindingen → verwijst naar het federatieve
-  // KIK-V-netwerk (decentrale databronnen rond een centrale index).
+export function UitvraagMark({ size = 34 }) {
+  // Gestileerde knopen + verbindingen → het federatieve KIK-V-netwerk
+  // (decentrale datastations rond de afnemer die de vraag stelt).
   return (
     <svg width={size} height={size} viewBox="0 0 40 40" fill="none" aria-hidden="true">
       <circle cx="20" cy="20" r="19" fill="var(--blue-hero)" />
@@ -21,7 +21,7 @@ export function KikMark({ size = 34 }) {
   )
 }
 
-export function KikLogo({ size = 34, color = '#fff', onClick }) {
+export function UitvraagLogo({ size = 34, color = '#fff', onClick }) {
   return (
     <button
       onClick={onClick}
@@ -30,13 +30,13 @@ export function KikLogo({ size = 34, color = '#fff', onClick }) {
         background: 'none', border: 'none', cursor: onClick ? 'pointer' : 'default', padding: 0,
       }}
     >
-      <KikMark size={size} />
+      <UitvraagMark size={size} />
       <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1 }}>
         <span style={{ fontWeight: 800, fontSize: 18, color, letterSpacing: '-0.01em' }}>
-          KIK<span style={{ color: 'var(--accent)' }}>-</span>Starter
+          Rhadix<span style={{ color: 'var(--accent)' }}> </span>Uitvraag
         </span>
         <span style={{ fontSize: 9.5, fontWeight: 600, color: 'var(--accent)', letterSpacing: '2px', textTransform: 'uppercase' }}>
-          Rhadix editie
+          KIK-V
         </span>
       </span>
     </button>

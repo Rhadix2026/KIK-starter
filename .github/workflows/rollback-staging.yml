@@ -30,7 +30,7 @@ jobs:
         run: |
           TAG="${{ inputs.image_tag }}"
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          if docker manifest inspect ghcr.io/rhadix2026/kik-backend:$TAG > /dev/null 2>&1; then
+          if docker manifest inspect ghcr.io/rhadix2026/uitvraag-backend:$TAG > /dev/null 2>&1; then
             echo "✓ Image tag '$TAG' gevonden op GHCR"
           else
             echo "✗ Image tag '$TAG' NIET gevonden op GHCR"; exit 1

@@ -1,4 +1,4 @@
-# KIK-Starter — Staging docker-compose
+# Rhadix Uitvraag — Staging docker-compose
 # ─────────────────────────────────────────────────────────────────────────────
 # VOLLEDIG GESCHEIDEN van productie én van de Rhadix-validation-app:
 #   - Eigen container-namen   (kik-staging-*)
@@ -43,7 +43,7 @@ services:
     # Geen externe poort — alleen intern Docker-netwerk
 
   backend:
-    image: ghcr.io/${GHCR_ORG:-rhadix2026}/kik-backend:${STAGING_IMAGE_TAG:-staging}
+    image: ghcr.io/${GHCR_ORG:-rhadix2026}/uitvraag-backend:${STAGING_IMAGE_TAG:-staging}
     container_name: kik-staging-backend
     restart: unless-stopped
     depends_on:
@@ -66,7 +66,7 @@ services:
       - "${STAGING_BACKEND_PORT:-8013}:8000"
 
   frontend:
-    image: ghcr.io/${GHCR_ORG:-rhadix2026}/kik-frontend:${STAGING_IMAGE_TAG:-staging}
+    image: ghcr.io/${GHCR_ORG:-rhadix2026}/uitvraag-frontend:${STAGING_IMAGE_TAG:-staging}
     container_name: kik-staging-frontend
     restart: unless-stopped
     depends_on:

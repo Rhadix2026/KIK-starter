@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { KikLogo } from './Brand'
+import { UitvraagLogo } from './Brand'
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 export function Nav({ authUser, onLogout, links = [] }) {
@@ -11,7 +11,7 @@ export function Nav({ authUser, onLogout, links = [] }) {
       justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100,
       boxShadow: '0 2px 12px rgba(0,0,0,.25)',
     }}>
-      <KikLogo onClick={() => navigate('/')} />
+      <UitvraagLogo onClick={() => navigate('/')} />
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         {links.map(l => (
           <Link key={l.to} to={l.to} style={_navBtn}>{l.label}</Link>
