@@ -31,6 +31,22 @@ def _ensure_columns() -> None:
     wanted = {
         "antwoorden": [("duur_ms", "INTEGER")],
         "uitvragen":  [("doorlooptijd_ms", "INTEGER")],
+        "zorgaanbieders": [
+            ("heeft_credential", "VARCHAR(8)"), ("straatnaam", "VARCHAR(255)"),
+            ("huisnummer", "VARCHAR(32)"), ("postcode", "VARCHAR(16)"),
+            ("gemeente", "VARCHAR(128)"), ("samenwerkingsverband", "VARCHAR(255)"),
+            ("doelgroepen", "TEXT"), ("sectoren", "TEXT"), ("zorgkantoren", "TEXT"),
+            ("concessiehouders", "TEXT"), ("contact_voornaam", "VARCHAR(128)"),
+            ("contact_achternaam", "VARCHAR(128)"), ("contact_telefoon", "VARCHAR(64)"),
+            ("contact_functie", "VARCHAR(255)"), ("fte", "FLOAT"),
+            ("locaties", "INTEGER"), ("bedden", "INTEGER"),
+            ("daas_leverancier", "VARCHAR(255)"), ("implementatie_consultant", "VARCHAR(255)"),
+            ("zelfscan_retour", "VARCHAR(255)"), ("intentieverklaring", "VARCHAR(255)"),
+            ("contract_datastation", "VARCHAR(255)"), ("aangesloten_test", "VARCHAR(255)"),
+            ("aangesloten_productie", "VARCHAR(255)"), ("huidige_fase", "VARCHAR(64)"),
+            ("vestigingen", "TEXT"), ("implementatiepartner", "VARCHAR(255)"),
+            ("uitwisselprofielen", "TEXT"),
+        ],
     }
     insp = inspect(engine)
     with engine.begin() as conn:
