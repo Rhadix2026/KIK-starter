@@ -29,7 +29,7 @@ def _ensure_columns() -> None:
     (bijv. staging) ontbreken nieuwe kolommen. Deze helper voegt ze defensief toe.
     """
     wanted = {
-        "antwoorden": [("duur_ms", "INTEGER")],
+        "antwoorden": [("duur_ms", "INTEGER"), ("query_id", "VARCHAR(64)"), ("datastation_url", "VARCHAR(512)")],
         "uitvragen":  [("doorlooptijd_ms", "INTEGER")],
         "zorgaanbieders": [
             ("heeft_credential", "VARCHAR(8)"), ("straatnaam", "VARCHAR(255)"),
@@ -57,6 +57,16 @@ def _ensure_columns() -> None:
             for name, ddl in cols:
                 if name not in existing:
                     conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {name} {ddl}"))
+
+    # Nieuwe enum-waarden (Postgres) — async-statussen
+    if engine.dialect.name == "postgresql":
+        with engine.connect().execution_options(isolation_level="AUTOCOMMIT") as conn:
+            for typ, val in [("antwoordstatus", "UITGEZET"), ("antwoordstatus", "AFGEWEZEN"),
+                             ("uitvraagstatus", "LOPEND")]:
+                try:
+                    conn.execute(text(f"ALTER TYPE {typ} ADD VALUE IF NOT EXISTS '{val}'"))
+                except Exception:
+                    pass
 
     # Verbreed bestaande kolommen (alleen Postgres dwingt lengte af; SQLite negeert dit)
     if engine.dialect.name == "postgresql":

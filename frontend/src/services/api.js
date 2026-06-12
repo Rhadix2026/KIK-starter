@@ -71,6 +71,7 @@ export async function importZorgaanbieders(file) {
 export const createUitvraag = (b) => req('POST', '/uitvragen', b)
 export const listUitvragen  = () => req('GET', '/uitvragen')
 export const getUitvraag    = (id) => req('GET', `/uitvragen/${id}`)
+export const ophalenAntwoorden = (id) => req('POST', `/uitvragen/${id}/ophalen`)
 
 // Export-download met auth-header → blob → bestand opslaan
 export async function downloadUitvraag(id, fmt = 'csv') {

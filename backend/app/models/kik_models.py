@@ -22,12 +22,15 @@ class AntwoordStatus(str, enum.Enum):
     OK        = "OK"
     GEEN_DATA = "GEEN_DATA"
     FOUT      = "FOUT"
+    UITGEZET  = "UITGEZET"    # async: vraag staat bij het datastation, wacht op beoordeling
+    AFGEWEZEN = "AFGEWEZEN"   # zorgaanbieder beantwoordt deze vraag niet
 
 
 class UitvraagStatus(str, enum.Enum):
     VOLTOOID  = "VOLTOOID"
     GEDEELTELIJK = "GEDEELTELIJK"
     MISLUKT   = "MISLUKT"
+    LOPEND    = "LOPEND"      # er staan nog vragen uit bij datastations
 
 
 class Zorgaanbieder(Base):
@@ -107,6 +110,8 @@ class Antwoord(Base):
     status            = Column(Enum(AntwoordStatus), nullable=False, default=AntwoordStatus.OK)
     toelichting       = Column(Text, nullable=True)
     duur_ms           = Column(Integer, nullable=True)   # gesimuleerde/echte datastation-latency
+    query_id          = Column(String(64), nullable=True)    # zaaknummer bij het datastation (async)
+    datastation_url   = Column(String(512), nullable=True)   # waar de vraag is uitgezet
     computed_at       = Column(DateTime(timezone=True), server_default=func.now())
 
     uitvraag      = relationship("Uitvraag", back_populates="antwoorden")
